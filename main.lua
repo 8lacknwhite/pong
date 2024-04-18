@@ -16,6 +16,7 @@ function love.load()
     love.window.setTitle('Pong')
 
     math.randomseed(os.time())
+    scoreFont = love.graphics.newFont('font.ttf',32)
 
     smallFont = love.graphics.newFont('font.ttf', 8)
 
@@ -27,6 +28,8 @@ function love.load()
         vsync = true
     })
 
+    player1Score = 0
+    player2Score = 0
 
     player1 = Paddle(10,30,5,20)
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 50,5,20)
@@ -67,7 +70,22 @@ function love.update(dt)
             ball.Y = VIRTUAL_HEIGHT - 4
             ball.dy = -ball.dy
         end
+
     end
+    
+    
+    if ball.x <0 then
+        player2Score = player2Score + 1
+        ball:reset()
+        gameState = 'start'
+    end
+    if ball.x > VIRTUAL_WIDTH then
+        player1Score = player1Score + 1
+        ball:reset()
+        gameState = 'start'
+    end
+
+
     -- player 1 movement
     if love.keyboard.isDown('w') then
 
@@ -128,6 +146,12 @@ function love.draw()
         love.graphics.printf('Hello Play State!', 0, 20, VIRTUAL_WIDTH, 'center')
     end
 
+    love.graphics.setFont(scoreFont)
+    love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, 
+    VIRTUAL_HEIGHT / 3)
+    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30,
+    VIRTUAL_HEIGHT / 3)    
+    
     player1:render()
 
     player2:render()
